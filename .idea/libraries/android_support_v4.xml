@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="android-support-v4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../enRT/google-play-services_lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../../enRT/google-play-services_lib/gen" />
+      <root url="file://$PROJECT_DIR$/../../../enRT/google-play-services_lib/src" />
+    </SOURCES>
+  </library>
+</component>
