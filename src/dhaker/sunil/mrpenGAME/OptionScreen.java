@@ -1,9 +1,6 @@
 package dhaker.sunil.mrpenGAME;
 
-import dhaker.sunil.mrpen.framwork.Game;
-import dhaker.sunil.mrpen.framwork.Graphics;
-import dhaker.sunil.mrpen.framwork.Input;
-import dhaker.sunil.mrpen.framwork.Screen;
+import dhaker.sunil.mrpen.framwork.*;
 
 import java.util.List;
 
@@ -12,8 +9,14 @@ import java.util.List;
  */
 public class OptionScreen extends Screen {
 
+    private Pixmap option ;
+    private Pixmap check ;
+    private Sound tui;
     public OptionScreen(Game game) {
         super(game);
+        option = game.getGraphics().newPixmap("options.png", Graphics.PixmapFormat.ARGB8888);
+        check = game.getGraphics().newPixmap("check.png" , Graphics.PixmapFormat.ARGB8888);
+        tui = game.getAudio().newSound("tui.mp3");
     }
 
     @Override
@@ -31,40 +34,38 @@ public class OptionScreen extends Screen {
 
                 if (inBounds(event, 745, 430, 820, 495)) {
                 	if(Settings.soundEnabled)
-                	Assets.tui.play(0.5f);
+                	tui.play(0.5f);
                     Settings.background = Settings.YELLOW;
 
                 } else if (inBounds(event, 830, 430, 905, 495)) {
                 	if(Settings.soundEnabled)
-                	Assets.tui.play(0.5f);
+                	tui.play(0.5f);
                     Settings.background = Settings.GREEN;
 
                 } else if (inBounds(event, 915, 430, 990, 495)) {
                 	if(Settings.soundEnabled)
-                	Assets.tui.play(0.5f);
+                	tui.play(0.5f);
                     Settings.background = Settings.BLUE;
 
                 } else if (inBounds(event, 660, 430, 730, 495)) {
                 	if(Settings.soundEnabled)
-                	Assets.tui.play(0.5f);
+                	tui.play(0.5f);
                     Settings.background = Settings.GRAY;
 
                 } else if (inBounds(event,660,295 , 735 , 360)) {
                 	if(Settings.soundEnabled)
-                	Assets.tui.play(0.7f);
+                	tui.play(0.7f);
                     Settings.soundEnabled = true ;
-                    Assets.bgAudio.play();
 
                 } else if (inBounds(event,745,295 ,820 , 360)) {
                 	
                     Settings.soundEnabled = false;
-                    Assets.bgAudio.pause();
                     if(Settings.soundEnabled)
-                    	Assets.tui.play(0.7f);
+                    	tui.play(0.7f);
                 } 
                 else if (inBounds(event, 40, 580, 180, 685)) {
                 	if(Settings.soundEnabled)
-                	Assets.tui.play(1);
+                	tui.play(1);
                     game.setScreen(new MainMenuScreen(game));
 
                 } 
@@ -78,26 +79,26 @@ public class OptionScreen extends Screen {
     public void present(float deltaTime) {
 
         Graphics g = game.getGraphics();
-        g.drawFitTheScreen(Assets.options);
+        g.drawFitTheScreen(option);
 
         if (Settings.background == Settings.GRAY) {
-            g.drawPixmap(Assets.check, 660, 430);
+            g.drawPixmap(check, 660, 430);
 
         } else if (Settings.background == Settings.YELLOW) {
-            g.drawPixmap(Assets.check, 745, 430);
+            g.drawPixmap(check, 745, 430);
 
         } else if (Settings.background == Settings.GREEN) {
-            g.drawPixmap(Assets.check, 830, 430);
+            g.drawPixmap(check, 830, 430);
 
 
         } else if (Settings.background == Settings.BLUE) {
-            g.drawPixmap(Assets.check, 915, 430);
+            g.drawPixmap(check, 915, 430);
 
         }
         if(Settings.soundEnabled){
-        	g.drawPixmap(Assets.check, 660,295);
+        	g.drawPixmap(check, 660,295);
         }else if(!Settings.soundEnabled){
-        	g.drawPixmap(Assets.check,745,295);
+        	g.drawPixmap(check,745,295);
         }
 
 
@@ -106,24 +107,18 @@ public class OptionScreen extends Screen {
     @Override
     public void pause() {        
         Settings.save(game.getFileIO());
-        if(Assets.bgAudio.isPlaying())
-    		Assets.bgAudio.pause();
-
     }
 
     @Override
     public void resume() {
 
-    	if(!Assets.bgAudio.isPlaying()){
-    		if(Settings.soundEnabled)Assets.bgAudio.play();
-    	}
-
     }
 
     @Override
     public void dispose() {
-    	 if(Assets.bgAudio.isPlaying())
-     		Assets.bgAudio.pause();
+        tui.dispose();
+        option.dispose();
+        check.dispose();
     }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int x2, int y2) {

@@ -1,15 +1,4 @@
 package dhaker.sunil.mrpen.framwork.impl;
-//
-//import com.google.ads.AdRequest;
-//import com.google.ads.AdSize;
-//import com.google.ads.AdView;
-
-
-
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -19,10 +8,8 @@ import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
 import android.widget.RelativeLayout;
 import dhaker.sunil.mrpen.framwork.Audio;
 import dhaker.sunil.mrpen.framwork.FileIO;
@@ -30,8 +17,6 @@ import dhaker.sunil.mrpen.framwork.Game;
 import dhaker.sunil.mrpen.framwork.Graphics;
 import dhaker.sunil.mrpen.framwork.Input;
 import dhaker.sunil.mrpen.framwork.Screen;
-import dhaker.sunil.mrpenGAME.Assets;
-
 public abstract class AndroidGame extends Activity implements Game {
     AndroidFastRenderView renderView;
     Graphics graphics;
@@ -40,8 +25,6 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-    AdView admobView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,23 +53,15 @@ public abstract class AndroidGame extends Activity implements Game {
         screen = getStartScreen();
 
 
-        admobView = new AdView(this, AdSize.BANNER, "a1533843582df6a");
+     
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lp.addRule(RelativeLayout.ALIGN_BASELINE);
-        admobView.setLayoutParams(lp);
-
+       
         RelativeLayout layout = new RelativeLayout(this);
         layout.addView(renderView);
-        layout.addView(admobView);
-        admobView.loadAd(new AdRequest());
-
+       
         setContentView(layout);
-
-       //admobView.setVisibility(View.INVISIBLE);
-
-      //   setContentView(renderView);
-        
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "MrPenGame");
     }
@@ -97,7 +72,7 @@ public abstract class AndroidGame extends Activity implements Game {
         wakeLock.acquire();
         screen.resume();
         renderView.resume();
-        admobView.loadAd(new AdRequest());
+       
         
     }
 
@@ -107,10 +82,7 @@ public abstract class AndroidGame extends Activity implements Game {
         wakeLock.release();
         renderView.pause();
         screen.pause();
-        admobView.stopLoading();
-		
-
-       
+  
     }
 
     @Override
@@ -149,7 +121,7 @@ public abstract class AndroidGame extends Activity implements Game {
     @Override
     public void onBackPressed() {
     	// TODO Auto-generated method stub
-    	admobView.destroy();
+    	
     	super.onBackPressed();
     }
 
@@ -157,8 +129,7 @@ public abstract class AndroidGame extends Activity implements Game {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		admobView.stopLoading();
-		admobView.destroy();
+		
 		super.onDestroy();
 	}
 

@@ -4,93 +4,92 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.util.Log;
+import dhaker.sunil.mrpen.framwork.Game;
+import dhaker.sunil.mrpen.framwork.Sound;
 
 public class World {
 
+	public boolean isGameOver = false;
 
-    public boolean isGameOver = false;
+	public Pencil dearPencil;
+	public ArrayList<Tip> tips = new ArrayList<Tip>();
+	private int score = 0;
 
-    public Pencil dearPencil;
-    public ArrayList<Tip> tips = new ArrayList<Tip>();
-    private int score = 0;
+	Random rand = new Random();
 
-    Random rand = new Random();
+	private float fireTimeCounter = 0;
+	private float delta;
+    private Sound warning , collisionSound ;
+	public World(Game game) {
+        collisionSound = game.getAudio().newSound("collision_1.mp3");
+        warning = game.getAudio().newSound("warning.mp3");
+		dearPencil = new Pencil();
+		delta = rand.nextFloat();
 
-    private float fireTimeCounter = 0;
-    private float delta;
+	}
 
+	public void fireTip() {
 
-    public World() {
+		tips.add(new Tip());
+	}
 
-        dearPencil = new Pencil();
-        delta = rand.nextFloat();
+	public void update(float deltaT) {
 
-    }
+		if (isGameOver) {
+			return;
+		}
 
+		dearPencil.update(deltaT);
+		for (int i = 0; i < tips.size(); i++) {
 
-    public void fireTip() {
+			if (!tips.get(i).isInsideWorld)
+				tips.remove(i);
+			break;
+		}
 
-        tips.add(new Tip());
-    }
+		// removing the tip which are outside the world ..
+		for (int i = 0; i < tips.size(); i++) {
+			tips.get(i).update(deltaT);
+			if (!tips.get(i).isInsideWorld) {
+				// tips.remove(tip);
+				score += 1;
+				if (score % 6 == 0)
+					warning.play(1f);
+				Tip.increaseSpeed();
+			}
+		}
 
+		fireTimeCounter += deltaT;
+		if (fireTimeCounter > 1 + delta) {
+			fireTip();
+			fireTimeCounter = 0;
+			delta = rand.nextFloat();
+		}
+		checkCollision();
+	}
 
-    public void update(float deltaT) {
+	private void checkCollision() {
 
-        if (isGameOver){
-            return;
-        }
+		for (int i = 0; i < tips.size(); i++) {
+			if ((tips.get(i).getPositionX()) < (dearPencil.getPositionX())
+					+ (dearPencil.width - 20)
+					&& tips.get(i).getPositionX() > dearPencil.getPositionX()
+							- (tips.get(i).width - 15)) {
+				if (-dearPencil.getPositionY() < (tips.get(i).height - 5)) {
+					isGameOver = true;
+					if (Settings.soundEnabled)
+						collisionSound.play(1.5f);
+				}
+			}
 
+		}
+	}
 
-        dearPencil.update(deltaT);
-        for (int i = 0; i < tips.size(); i++) {
+	public void touchTheWorld() {
+		dearPencil.touch();
+	}
 
-            if (!tips.get(i).isInsideWorld)
-                tips.remove(i);
-            break;
-        }
-
-        //removing  the tip which are outside the world ..
-        for (int i = 0 ; i < tips.size() ;i ++) {
-            tips.get(i).update(deltaT);
-            if (!tips.get(i).isInsideWorld) {
-                //tips.remove(tip);
-                score += 1;
-               if(score % 6 == 0)
-            	 Assets.warning.play(1f);
-                Tip.increaseSpeed();
-            }
-        }
-
-
-        fireTimeCounter += deltaT;
-        if (fireTimeCounter > 1  + delta) {
-            fireTip();
-            fireTimeCounter = 0;
-            delta = rand.nextFloat();
-        }
-        checkCollision();
-    }
-
-
-    private void checkCollision() {
-
-        for (int i = 0 ; i < tips.size() ;i ++) {
-            if ( ( tips.get(i).getPositionX())  <  (dearPencil.getPositionX()) + (dearPencil.width -20)  &&  tips.get(i).getPositionX() > dearPencil.getPositionX() - ( tips.get(i).width - 15 )) {
-                if(  -dearPencil.getPositionY()  <  ( tips.get(i).height -5) ){
-                isGameOver = true ;
-                if(Settings.soundEnabled)Assets.collisionSound.play(1.5f);
-                }
-            }
-
-        }
-    }
-
-
-    public void touchTheWorld() {
-        dearPencil.touch();
-    }
-
-    public int getScore() {
-        return score;
-    }
+	public int getScore() {
+		return score;
+	}
 }

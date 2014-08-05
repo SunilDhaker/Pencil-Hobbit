@@ -1,14 +1,17 @@
 package dhaker.sunil.mrpenGAME;
 
 import dhaker.sunil.mrpen.framwork.Game;
+import dhaker.sunil.mrpen.framwork.Graphics;
+import dhaker.sunil.mrpen.framwork.Pixmap;
 import dhaker.sunil.mrpen.framwork.Screen;
 import dhaker.sunil.mrpen.framwork.impl.AndroidGame;
 
 public class FinishScreen extends Screen{
-
+    private Pixmap flash2 ;
 	private float timer = 0 ;
 	public FinishScreen(Game game) {
 		super(game);
+        flash2 =  game.getGraphics().newPixmap("flash.png", Graphics.PixmapFormat.ARGB8888);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -16,45 +19,14 @@ public class FinishScreen extends Screen{
 	public void update(float deltaTime) {
 		// TODO Auto-generated method stub
 		 timer = timer + deltaTime;
-		 if(timer > 2f){
-		 System.gc();
-         Assets.bgAudio.dispose();
-         Assets.background_blue.dispose();
-         Assets.background_yellow.dispose();
-         Assets.background_gray.dispose();
-         Assets.mainMenu.dispose();
-         Assets.numbers.dispose();
-         Assets.pencil_1.dispose();
-         Assets.pencil_2.dispose();
-         Assets.pencil_3_jumping.dispose();
-         Assets.tip.dispose();
-         Assets.base.dispose();
-         
-     
-          Assets.background_green.dispose();
-          Assets.pencil_deid.dispose();
-          Assets.credits.dispose();
-          Assets.gameOver.dispose();
-          Assets.pause.dispose();
-     	  Assets.pause_button.dispose();
-     	  Assets.check.dispose();
-     	  Assets.tui.dispose();
-     	  Assets.collisionSound.dispose();
-      	  Assets.flash.dispose();
-     	 
-     	
-     	 Assets.warning.dispose();
-     	 Assets.z1.dispose();
-     	 Assets.z2.dispose();
-     	 System.gc();
-     	 ((AndroidGame)game).finish();}
-		
+		if(timer > 2f)
+            ((AndroidGame) game).finish();
 	}
 
 	@Override
 	public void present(float deltaTime) {
 		// TODO Auto-generated method stub
-			game.getGraphics().drawFitTheScreen(Assets.flash2);
+			game.getGraphics().drawFitTheScreen(flash2);
 				
 	}
 
@@ -73,7 +45,7 @@ public class FinishScreen extends Screen{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+		flash2.dispose();
 	}
 
 }
